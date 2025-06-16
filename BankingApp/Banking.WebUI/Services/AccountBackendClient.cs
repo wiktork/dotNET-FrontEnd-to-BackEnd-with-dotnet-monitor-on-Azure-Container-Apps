@@ -11,11 +11,19 @@ namespace Banking.WebUI.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public Task<HttpResponseMessage> AccountTransfer(AccountTransfer accountTransfer)
+        public async Task<HttpResponseMessage> AccountTransfer(AccountTransfer accountTransfer)
         {
             var client = _httpClientFactory.CreateClient("Accounts");
 
-            return RestService.For<IAccountBackendClient>(client).AccountTransfer(accountTransfer);
+            return await Task.Run(() =>
+            {
+                lock (accountTransfer)
+                {
+                    var result = RestService.For<IAccountBackendClient>(client).AccountTransfer(accountTransfer).Result;
+                    return result;
+                }
+
+            });
         }
 
         public Task<List<Account>> GetAccounts()

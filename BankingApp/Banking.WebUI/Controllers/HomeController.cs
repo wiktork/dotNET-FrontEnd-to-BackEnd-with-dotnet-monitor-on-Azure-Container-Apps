@@ -1,6 +1,7 @@
 ﻿using Banking.WebUI.Models;
 using Banking.WebUI.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 
 namespace Banking.WebUI.Controllers
@@ -21,9 +22,15 @@ namespace Banking.WebUI.Controllers
             return View();
         }
 
-        public IActionResult Transfer(AccountTransfer accountTransfer)
-        {            
-            var resp = _accountBackendClient.AccountTransfer(accountTransfer).Result;
+        public async Task<IActionResult> Transfer(AccountTransfer accountTransfer)
+        {
+            HttpResponseMessage? resp = null;
+            lock (accountTransfer)
+            {
+                resp = _accountBackendClient.AccountTransfer(accountTransfer).Result;
+            }
+            var result = await resp.Content.ReadAsStringAsync();
+            _logger.LogInformation($"Status: [{resp.StatusCode}] {result}");
 
             return RedirectToAction("Index");
         }

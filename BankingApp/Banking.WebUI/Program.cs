@@ -1,11 +1,17 @@
+using Banking.WebUI;
 using Banking.WebUI.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient("Accounts", (httpClient) => httpClient.BaseAddress = new Uri(builder.Configuration.GetValue<string>("AccountApi")));
-builder.Services.AddScoped<IAccountBackendClient, AccountBackendClient> ();
+
+Uri uri = new Uri(builder.Configuration.GetValue<string>("AccountApi"));
+builder.Services.AddHttpClient("Accounts", (httpClient) => httpClient.BaseAddress = uri);
+builder.Services.AddScoped<IAccountBackendClient, AccountBackendClient>();
 
 var app = builder.Build();
 
