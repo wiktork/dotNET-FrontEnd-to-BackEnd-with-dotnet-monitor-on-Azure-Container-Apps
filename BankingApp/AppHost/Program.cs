@@ -2,10 +2,13 @@ using Projects;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var apiService = builder.AddProject<Banking_AccountApi>("apiservice");
-builder.AddProject<Banking_WebUI>("frontend")
+
+
+var apiService = builder.AddDockerfile("BankingAccountApi", "..", "Banking.AccountApi/Dockerfile");
+
+builder.AddDockerfile("BankingWebUI", "..", "Banking.WebUI/Dockerfile")
     .WithExternalHttpEndpoints()
-    .WithReference(apiService)
+    .WithReference(apiService.GetEndpoint("Banking.AccountApi"))
     .WaitFor(apiService);
 
 builder.Build().Run();
