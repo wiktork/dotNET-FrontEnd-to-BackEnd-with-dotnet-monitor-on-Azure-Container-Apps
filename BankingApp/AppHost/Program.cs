@@ -1,14 +1,17 @@
+using Aspire.Hosting;
 using Projects;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+var apiService = builder.AddDockerfile("bankservice", "..", "Banking.AccountApi/Dockerfile", "final");
+apiService.WithEndpoint(targetPort: 8080, scheme: "http");
 
-
-var apiService = builder.AddDockerfile("BankingAccountApi", "..", "Banking.AccountApi/Dockerfile");
-
-builder.AddDockerfile("BankingWebUI", "..", "Banking.WebUI/Dockerfile")
-    .WithExternalHttpEndpoints()
-    .WithReference(apiService.GetEndpoint("Banking.AccountApi"))
+var uiBuilder = builder.AddDockerfile("bankui", "..", "Banking.WebUI/Dockerfile", "final");
+    uiBuilder.WithEndpoint(targetPort: 8080, scheme: "http", isProxied: true, isExternal: true)
+    .WithReference(apiService.GetEndpoint("bankservice"))
     .WaitFor(apiService);
+
+
+//.WithBuildSecret("FEED_PAT", parameter)
 
 builder.Build().Run();
