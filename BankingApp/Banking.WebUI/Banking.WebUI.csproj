@@ -10,7 +10,7 @@
 
   <ItemGroup>
 	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.2" />
-	<!--<PackageReference Include="Microsoft.VisualStudio.DiagnosticAnalysisCLI.Linux.x64" Version="2.0.3095.201" />-->
+	<PackageReference Include="Microsoft.VisualStudio.DiagnosticAnalysisCLI.Linux.x64" Version="2.0.3095.201" />
 	<PackageReference Include="Refit" Version="8.0.0" />
   </ItemGroup>
 
