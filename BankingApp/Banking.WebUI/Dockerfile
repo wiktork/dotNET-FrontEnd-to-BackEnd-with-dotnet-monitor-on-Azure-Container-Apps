@@ -19,6 +19,8 @@ COPY . .
 WORKDIR /diag/cli
 RUN ls -l /root/.nuget/packages
 RUN cp -r /root/.nuget/packages/microsoft.visualstudio.diagnosticanalysiscli.linux.x64/2.0.3095.201/content/net8.0/* .
+COPY "Banking.WebUI/analyze.sh" /diag/cli/analyze.sh
+
 WORKDIR "/src/Banking.WebUI"
 RUN dotnet build "Banking.WebUI.csproj" -c Release -o /app/build
 
