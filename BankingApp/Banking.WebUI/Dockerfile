@@ -6,6 +6,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 443
+ENV DOTNET_EnableDiagnostics=0
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG FEED_PAT
@@ -32,4 +33,24 @@ EXPOSE 8080
 WORKDIR /app
 COPY --from=publish /app/publish .
 COPY --from=publish /diag/cli /diag/cli
+
+# TESTONLY We will bring in procdump here right away.
+# The more correct long term approach for ACA:
+# Use a sidecar image instead of exec (i.e. debug)
+# Download procdump in the side car
+# Transfer procdump to the main container via procfs. 
+# exec procdump in the main container
+
+RUN apt-get update
+RUN apt-get install -y wget
+RUN wget -q https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+RUN dpkg -i packages-microsoft-prod.deb
+RUN apt-get update
+RUN apt-get install -y apt-transport-https
+RUN apt-get update
+RUN apt-get install -y procdump
+#/proc/net/unix is populated by non-1 domain sockets that are stale. How do we get rid of these?
+ENV DOTNET_EnableDiagnostics=1 
+# END TEST ONLY
+
 ENTRYPOINT ["dotnet", "Banking.WebUI.dll"]

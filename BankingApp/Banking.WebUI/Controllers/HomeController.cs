@@ -17,6 +17,15 @@ namespace Banking.WebUI.Controllers
             _logger = logger;
         }
 
+        public IActionResult SerializeAddress()
+        {
+            Address address1 = new Address("123 Main St", "Springfield", "IL", "12345");
+            string serialized = address1.ToJson();
+            Address address2 = Address.FromJson(serialized);
+
+            return View("Index");
+        }
+
         public IActionResult Index()
         {
             return View();

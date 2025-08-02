@@ -34,4 +34,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapControllerRoute(
+    name: "address",
+    pattern: "{controller=Home}/{action=SerializeAddress}/{id?}");
+
 app.Run();
