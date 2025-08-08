@@ -1,6 +1,11 @@
 using Aspire.Hosting;
 using Projects;
 
+
+// Additional steps required for successfull build:
+// dotnet user-secret set pat <PAT that has package read from devdiv>
+// modified procdump build
+
 var builder = DistributedApplication.CreateBuilder(args);
 var parameter = builder.AddParameter("pat", value:builder.Configuration["pat"]);
 

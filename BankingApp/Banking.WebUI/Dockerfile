@@ -1,17 +1,15 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-
-
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 443
-ENV DOTNET_EnableDiagnostics=0
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG FEED_PAT
 RUN curl -L https://aka.ms/install-artifacts-credprovider.sh | sh
 ENV VSS_NUGET_EXTERNAL_FEED_ENDPOINTS="{\"endpointCredentials\":[{\"endpoint\":\"https://devdiv.pkgs.visualstudio.com/OnlineServices/_packaging/DiagnosticAnalysis-Images/nuget/v3/index.json\",\"username\":\"docker\",\"password\":\"${FEED_PAT}\"}]}"
+
 WORKDIR /src
 COPY ["Banking.WebUI/Banking.WebUI.csproj", "Banking.WebUI/"]
 COPY ["Banking.WebUI/Nuget.config", "Banking.WebUI/"]
@@ -49,6 +47,8 @@ RUN apt-get update
 RUN apt-get install -y apt-transport-https
 RUN apt-get update
 RUN apt-get install -y procdump
+# Use local procdump binary instead of installing via apt
+COPY Banking.WebUI/procdump /usr/bin/procdump
 #/proc/net/unix is populated by non-1 domain sockets that are stale. How do we get rid of these?
 ENV DOTNET_EnableDiagnostics=1 
 # END TEST ONLY
