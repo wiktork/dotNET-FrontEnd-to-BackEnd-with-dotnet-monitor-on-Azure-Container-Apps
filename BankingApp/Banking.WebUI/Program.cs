@@ -9,7 +9,6 @@ builder.AddServiceDefaults();
 builder.Services.AddControllersWithViews();
 
 var containerAppName = Environment.GetEnvironmentVariable("CONTAINER_APP_NAME");
-
 Uri uri = new((containerAppName != null) ? builder.Configuration.GetValue<string>("AccountApi") : "http://bankservice:8080");
 builder.Services.AddHttpClient("Accounts", httpClient => httpClient.BaseAddress = uri);
 builder.Services.AddScoped<IAccountBackendClient, AccountBackendClient>();
