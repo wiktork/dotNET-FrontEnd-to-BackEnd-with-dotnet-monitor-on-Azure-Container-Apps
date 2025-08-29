@@ -52,5 +52,6 @@ COPY Banking.WebUI/procdump /usr/bin/procdump
 #/proc/net/unix is populated by non-1 domain sockets that are stale. How do we get rid of these?
 ENV DOTNET_EnableDiagnostics=1 
 # END TEST ONLY
+RUN wget https://aka.ms/getvsdbgsh -O - 2>/dev/null | /bin/sh /dev/stdin -v latest -l /vsdbg
 
 ENTRYPOINT ["dotnet", "Banking.WebUI.dll"]
