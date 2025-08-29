@@ -6,18 +6,18 @@ EXPOSE 8080
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-ARG FEED_PAT
-RUN curl -L https://aka.ms/install-artifacts-credprovider.sh | sh
-ENV VSS_NUGET_EXTERNAL_FEED_ENDPOINTS="{\"endpointCredentials\":[{\"endpoint\":\"https://devdiv.pkgs.visualstudio.com/OnlineServices/_packaging/DiagnosticAnalysis-Images/nuget/v3/index.json\",\"username\":\"docker\",\"password\":\"${FEED_PAT}\"}]}"
+#ARG FEED_PAT
+#RUN curl -L https://aka.ms/install-artifacts-credprovider.sh | sh
+#ENV VSS_NUGET_EXTERNAL_FEED_ENDPOINTS="{\"endpointCredentials\":[{\"endpoint\":\"https://devdiv.pkgs.visualstudio.com/OnlineServices/_packaging/DiagnosticAnalysis-Images/nuget/v3/index.json\",\"username\":\"docker\",\"password\":\"${FEED_PAT}\"}]}"
 
 WORKDIR /src
 COPY ["Banking.WebUI/Banking.WebUI.csproj", "Banking.WebUI/"]
 COPY ["Banking.WebUI/Nuget.config", "Banking.WebUI/"]
 RUN dotnet restore "Banking.WebUI/Banking.WebUI.csproj" --configfile "Banking.WebUI/Nuget.config"
 COPY . .
-WORKDIR /diag/cli
-RUN ls -l /root/.nuget/packages
-RUN cp -r /root/.nuget/packages/microsoft.visualstudio.diagnosticanalysiscli.linux.x64/2.0.3095.201/content/net8.0/* .
+#WORKDIR /diag/cli
+#RUN ls -l /root/.nuget/packages
+#RUN cp -r /root/.nuget/packages/microsoft.visualstudio.diagnosticanalysiscli.linux.x64/2.0.3095.201/content/net8.0/* .
 COPY "Banking.WebUI/analyze.sh" /diag/cli/analyze.sh
 
 WORKDIR "/src/Banking.WebUI"
