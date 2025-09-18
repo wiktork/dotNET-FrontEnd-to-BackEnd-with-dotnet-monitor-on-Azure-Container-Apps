@@ -53,5 +53,8 @@ COPY Banking.WebUI/procdump /usr/bin/procdump
 ENV DOTNET_EnableDiagnostics=1 
 # END TEST ONLY
 RUN wget https://aka.ms/getvsdbgsh -O - 2>/dev/null | /bin/sh /dev/stdin -v latest -l /vsdbg
+WORKDIR /AgentDebuggerProxy
+COPY Banking.WebUI/AgentDebuggerProxy/* /AgentDebuggerProxy/
+WORKDIR /app
 
 ENTRYPOINT ["dotnet", "Banking.WebUI.dll"]
