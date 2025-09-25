@@ -9,6 +9,8 @@
 *.user
 *.userosscache
 *.sln.docstates
+vsdbg/
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -349,3 +351,4 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /BankingApp/Banking.WebUI/warmup.sem
+/BankingApp/Banking.WebUI/AgentDebuggerProxy/Agent.DebuggerProxy
